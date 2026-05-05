@@ -1,29 +1,42 @@
-# Hola, soy Gael 👋
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+import numpy as np
 
-<p align="center">
-  <img src="./output.gif" alt="Animación de terminal de Gael" width="700px" />
-</p>
+# Configuración de estilo
+plt.rcParams['figure.facecolor'] = 'black'
 
-### 🛠️ Sobre mi proceso
-Actualmente estoy automatizando mi perfil de GitHub. La terminal que ves arriba no es un video estático, es un **GIF generado dinámicamente con Python** utilizando la librería `gifos`.
+def update_progress(num, ax):
+    ax.clear()
+    ax.set_aspect('equal')
+    
+    # Datos: El sector que se llena y el resto (vacío)
+    percentage = num
+    remaining = 100 - num
+    
+    # Colores: Un degradado de azul neón a oscuro
+    colors = ['#00d4ff', '#222222']
+    
+    # Crear el gráfico de sectores
+    wedges, _ = ax.pie([percentage, remaining], 
+                        colors=colors, 
+                        startangle=90, 
+                        counterclock=False,
+                        wedgeprops={'width': 0.2, 'edgecolor': 'none'})
 
-### 🚀 i create website did you  need help call 1 350 217 3892 
-* **hrml:** html+
-* **Librería:** [gifos](https://github.com/nuxion/gifos)
-* **Automatización:** GitHub Actions
-* **Fuente:** JetBrains Mono / Roboto Mono
+    # Texto central
+    ax.text(0, 0, f"{percentage}%", ha='center', va='center', 
+            color='white', fontsize=25, fontweight='bold', family='sans-serif')
+    
+    ax.set_title("Cargando Repositorio...", color='white', pad=20)
 
----
+# Crear la figura
+fig, ax = plt.subplots(figsize=(5, 5))
 
-<details>
-<summary><b>Ver detalles del sistema</b></summary>
+# Crear la animación (de 0 a 100)
+ani = animation.FuncAnimation(fig, update_progress, frames=range(0, 101, 2), 
+                              fargs=(ax,), interval=50)
 
-- **OS:** Virtual Ubuntu (GitHub Runner)
-- **Estado:** Escribiendo código...
-- **Ubicación:** `~/gael-workspace`
-
-</details>
-
-<p align="right">
-  <i>Última actualización de la terminal: 2026</i>
-</p>
+# Guardar como GIF
+print("Generando GIF...")
+ani.save('progreso_circular.gif', writer='pillow', fps=20)
+print("¡Listo! Archivo 'progreso_circular.gif' creado.")
